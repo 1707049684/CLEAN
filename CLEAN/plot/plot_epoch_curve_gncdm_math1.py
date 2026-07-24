@@ -45,7 +45,7 @@ CLORA_LAMBDA = 0.1
 
 # 官方策略名 -> 图例名
 PLOT_NAMES = {
-    "Ours (Dynamic DNA)": "CLEAN-Full",
+    "CLEAN-Full": "CLEAN-Full",
     "Full Replay Oracle": "Full-Replay",
 }
 

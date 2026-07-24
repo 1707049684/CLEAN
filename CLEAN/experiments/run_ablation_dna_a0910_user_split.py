@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""DNA 组件细粒度消融 · a0910 · user_split
+"""CLEAN-Full component ablation · a0910 · user_split
 
-对比 Ours(Dynamic DNA) 的两个核心组件分别消融的效果：
+对比 CLEAN-Full 的两个核心组件分别消融的效果：
 
 | 名称                     | OrthoMask | FrozenBias |
 |--------------------------|-----------|------------|
-| Ours (Dynamic DNA)       | ✓         | ✓          |
+| CLEAN-Full       | ✓         | ✓          |
 | Ablated (w/o OrthoMask)  | ✗         | ✓          |  <- 只消融正交掩码
 | Ablated (w/o FrozenBias) | ✓         | ✗          |  <- 只消融冻结共享偏置
 | Ours-Ablated             | ✗         | ✗          |  <- 同时消融两者（原始参照）
@@ -83,7 +83,7 @@ def run_ablations(ours, meta, device):
 
     rows = []
 
-    def record(name, r_old, r_new, tmd):
+    def record(name, r_old, r_new, rd):
         rows.append(
             {
                 "Method": name,
@@ -95,7 +95,7 @@ def run_ablations(ours, meta, device):
                 "ACC_new": r_new["acc"] if r_new else "-",
                 "F1_old": r_old["f1"],
                 "F1_new": r_new["f1"] if r_new else "-",
-                "RD": tmd if tmd is not None else "",
+                "RD": rd if rd is not None else "",
             }
         )
         ns = f" | 新 AUC={r_new['auc']:.4f} ACC={r_new['acc']:.4f}" if r_new else ""
@@ -163,8 +163,8 @@ def run_ablations(ours, meta, device):
         for h in handles:
             h.remove()
         populate_buffers(m, log_full, device)
-        tmd = calculate_rd(base_theta_old.to(device), m.get_Theta_buf().to(device), n_know_old)
-        record(name, final_old(m), final_new(m), tmd)
+        rd = calculate_rd(base_theta_old.to(device), m.get_Theta_buf().to(device), n_know_old)
+        record(name, final_old(m), final_new(m), rd)
 
     # 参照：Ours-Ablated（同时消融两者）
     print("\n=== Ours-Ablated（同时消融 OrthoMask + FrozenBias，参照）===")
@@ -174,10 +174,10 @@ def run_ablations(ours, meta, device):
         mask_agg_old=False,
     )
 
-    # 参照：Ours(Dynamic DNA)（两者均保留）
-    print("\n=== Ours(Dynamic DNA)（OrthoMask + FrozenBias 均保留，参照）===")
+    # 参照：CLEAN-Full（两者均保留）
+    print("\n=== CLEAN-Full（OrthoMask + FrozenBias 均保留，参照）===")
     run_strategy(
-        "Ours (Dynamic DNA)",
+        "CLEAN-Full",
         lambda m: new_params(m) + [m.theta_agg_mat.weight, m.psi_agg_mat.weight],
         mask_agg_old=True,
     )
@@ -226,7 +226,7 @@ def write_table(rows):
 
     note = (
         "\n*消融对象*：OrthoMask = theta_agg_mat/psi_agg_mat 旧列梯度归零（hook）；"
-        "FrozenBias = DNA 只训 new_params+agg_mat.weight，不训 bias。\n"
+        "FrozenBias = CLEAN-Full only trains new_params+agg_mat.weight，不训 bias。\n"
         "*口径*：a0910 user_split，support/query（frac=0.5, seed=7）同 eval_all_methods 一致。\n"
         "*RD*：G-NCDM 概念 θ 空间（架构隔离→0/极小），仅 w/o-FrozenBias 训了 bias 可能略有漂移。\n"
     )
@@ -235,7 +235,7 @@ def write_table(rows):
         f.write("\n".join(lines) + "\n" + note)
 
     print("\n" + "=" * 70)
-    print(" DNA 组件消融（a0910 user_split）")
+    print(" CLEAN-Full component ablation（a0910 user_split）")
     print("=" * 70)
     print("\n".join(lines))
     print(f"\n>>> 写入 {csv_path}\n>>> 写入 {md_path}")

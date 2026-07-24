@@ -18,7 +18,7 @@ CLEAN/
 |-- incremental/                    # 增量学习模块（本次新增）
 |   |-- __init__.py
 |   |-- loss.py                     # TopologyAwareDecoupledLoss 解耦损失
-|   |-- metrics.py                  # TMD 计算器 + LR 预热调度器
+|   |-- metrics.py                  # RD 计算器 + LR 预热调度器
 |
 |-- experiments/                    # 实验脚本
 |   |-- test_incremental.py         # 增量学习单元测试
@@ -54,7 +54,7 @@ CLEAN/
 ### 2. incremental/ - 增量学习模块
 本次改造新增的增量学习组件：
 - **loss.py**: 解耦蒸馏损失 `TopologyAwareDecoupledLoss`
-- **metrics.py**: 评估指标和调度器（TMD、LR Warm-up）
+- **metrics.py**: 评估指标和调度器（RD、LR Warm-up）
 
 ### 3. experiments/ - 实验脚本
 用于验证和测试的脚本：

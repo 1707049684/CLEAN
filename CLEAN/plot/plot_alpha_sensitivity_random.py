@@ -2,7 +2,7 @@
 """Sensitivity analysis of the mixing coefficient α on random splits.
 
 Reads Math1 / junyi / a0910 sweep CSVs under incremental_result/, plots
-sel_DNA_validACC = DNA mean(valid ACC_old, ACC_new) vs alpha, marks the
+sel_DNA_validACC = CLEAN-Full mean(valid ACC_old, ACC_new) vs alpha, marks the
 chosen operating point, and overlays DNA test ACC_new.
 
 Location: CLEAN/plot/plot_alpha_sensitivity_random.py

@@ -279,8 +279,8 @@ print(f"  new-test n={n_n}: AUC={auc_n:.4f} ACC={acc_n:.4f} F1={f1_n:.4f} RMSE={
 out_csv = os.environ.get("ICD_OUTPUT_CSV", os.path.join(OUT, f"icd_row_{DATASET}_random_split.csv"))
 os.makedirs(os.path.dirname(os.path.abspath(out_csv)), exist_ok=True)
 pd.DataFrame([row]).to_csv(out_csv, index=False)
-# ready-to-append line (TMD column = RD) for all_methods_{DATASET}_random_split.csv
-print("\nappend to all_methods_%s_random_split.csv (last col=TMD):" % DATASET)
+# ready-to-append line (RD column) for all_methods_{DATASET}_random_split.csv
+print("\nappend to all_methods_%s_random_split.csv (last col=RD):" % DATASET)
 print(
     ",".join(
         str(row[k])

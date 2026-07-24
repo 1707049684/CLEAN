@@ -5,7 +5,7 @@ Unlike θ_old AlignedUMAP (RD=0 for all CLEAN ablations), this embeds each
 learner's old-item score predictions ŷ ∈ R^{M_old} at t=0 (Base) vs t=1
 (after incremental), so aggregation ablations become visible.
 
-Variants (same as DNA ablation):
+Variants (same as CLEAN-Full ablation):
   CLEAN-Full / CLEAN (w/o OrthoMask) / CLEAN (w/o FrozenBias) / CLEAN (w/o OCM)
 
 Protocol: Math1 random_split (0.8/0.2 CSVs), α=0.20, strict bipartition,

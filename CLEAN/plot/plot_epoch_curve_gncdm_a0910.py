@@ -41,7 +41,7 @@ ALPHA = 0.1
 CLORA_LAMBDA = 10  # all_methods_a0910_random_split.csv C-LoRA-GNCDM (lambda=10)
 
 PLOT_NAMES = {
-    "Ours (Dynamic DNA)": "CLEAN-Full",
+    "CLEAN-Full": "CLEAN-Full",
     "Full Replay Oracle": "Full-Replay",
 }
 

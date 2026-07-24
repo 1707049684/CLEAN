@@ -44,14 +44,14 @@ CACHE_DIR = SAVE_DIR / "aligned_umap_cache_math1"
 DATA_DIR = Path(R.DATA_DIR)
 
 N_USER, N_ITEM, N_KNOW = 4209, 20, 11
-ALPHA_DNA = 0.20
+ALPHA_CLEAN = 0.20
 NEW_CONCEPTS = [0, 1, 3, 6]
 N_EPOCH = 15
 SEED = 42
 
 METHODS = {
-    "full": ("Ours (Dynamic DNA)", "CLEAN-Full", True),
-    "lora": ("Ours (LoRA)", "CLEAN-LoRA", False),
+    "full": ("CLEAN-Full", "CLEAN-Full", True),
+    "lora": ("CLEAN-LoRA", "CLEAN-LoRA", False),
 }
 
 
@@ -120,7 +120,7 @@ def train_base_and_incremental(method_key: str, device: torch.device, n_epoch: i
         n_know=n_know_old,
         user_dim=32,
         item_dim=32,
-        alpha=ALPHA_DNA,
+        alpha=ALPHA_CLEAN,
         Q_mat=Q_mat[:n_item_old, :n_know_old].copy(),
         monotonicity_assumption=True,
         device=device,

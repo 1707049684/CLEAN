@@ -343,7 +343,7 @@ def run_xder(
     populate_buffers(model, log_full, device)
     r_old = evaluate_buf(model, test_old, device)
     r_new = evaluate_buf(model, test_new, device)
-    tmd = calculate_rd(base_theta_old.to(device), model.get_Theta_buf().to(device), n_know_old)
+    rd = calculate_rd(base_theta_old.to(device), model.get_Theta_buf().to(device), n_know_old)
 
     method = f"X-DER (mem={buffer_size})"
     row = {
@@ -356,7 +356,7 @@ def run_xder(
         "ACC_new": r_new["acc"],
         "F1_old": r_old["f1"],
         "F1_new": r_new["f1"],
-        "RD": tmd,
+        "RD": rd,
         "mem_size": buffer_size,
         "selection_source": "fixed_from_existing_result",
     }
@@ -364,7 +364,7 @@ def run_xder(
         f"\n  [{method}]\n"
         f"    旧: AUC={r_old['auc']:.4f} ACC={r_old['acc']:.4f} F1={r_old['f1']:.4f}\n"
         f"    新: AUC={r_new['auc']:.4f} ACC={r_new['acc']:.4f} F1={r_new['f1']:.4f}\n"
-        f"    RD={tmd:.4f}（与 Ours 同 θ 空间,可直接对比）"
+        f"    RD={rd:.4f}（与 Ours 同 θ 空间,可直接对比）"
     )
 
     if write_artifacts:
@@ -552,7 +552,7 @@ def run_xder_user_split(
     populate_buffers(model, log_full, device)
     r_old = evaluate_recon(model, qry_test_old, sup_test_full_log, device)
     r_new = evaluate_recon(model, qry_test_new, sup_test_full_log, device)
-    tmd = calculate_rd(base_theta_old.to(device), model.get_Theta_buf().to(device), n_know_old)
+    rd = calculate_rd(base_theta_old.to(device), model.get_Theta_buf().to(device), n_know_old)
 
     method = f"X-DER (mem={buffer_size})"
     row = {
@@ -565,13 +565,13 @@ def run_xder_user_split(
         "ACC_new": r_new["acc"],
         "F1_old": r_old["f1"],
         "F1_new": r_new["f1"],
-        "RD": tmd,
+        "RD": rd,
     }
     print(
         f"\n  [{method}]\n"
         f"    旧: AUC={r_old['auc']:.4f} ACC={r_old['acc']:.4f} F1={r_old['f1']:.4f}\n"
         f"    新: AUC={r_new['auc']:.4f} ACC={r_new['acc']:.4f} F1={r_new['f1']:.4f}\n"
-        f"    RD={tmd:.4f}（与 Ours 同 θ 空间，可直接对比）"
+        f"    RD={rd:.4f}（与 Ours 同 θ 空间，可直接对比）"
     )
 
     os.makedirs(artifact_dir, exist_ok=True)

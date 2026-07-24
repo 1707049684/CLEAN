@@ -45,7 +45,7 @@ METRIC_DIRECTIONS = {
     "Balanced_ACC": 1,
     "RMSE_old": -1,
     "RMSE_new": -1,
-    "TMD": -1,
+    "RD": -1,
     "RD": -1,
 }
 

@@ -433,7 +433,7 @@ def run_user_split(
         populate_buffers(model, meta["log_full"], device)
         r_old = evaluate_recon(model, meta["qry_test_old"], meta["sup_test_full_log"], device)
         r_new = evaluate_recon(model, meta["qry_test_new"], meta["sup_test_full_log"], device)
-        tmd = calculate_rd(
+        rd = calculate_rd(
             base_theta_ref[:, :n_know_old].to(device), model.get_Theta_buf().to(device), n_know_old
         )
         r = {
@@ -446,7 +446,7 @@ def run_user_split(
             "ACC_new": r_new["acc"],
             "F1_old": r_old["f1"],
             "F1_new": r_new["f1"],
-            "RD": tmd,
+            "RD": rd,
         }
         rows.append(r)
         print(
@@ -559,7 +559,7 @@ def run_one_lambda(
     populate_buffers(model, meta["log_full"], device)
     r_old = evaluate_buf(model, meta["test_old"], device)
     r_new = evaluate_buf(model, meta["test_new"], device)
-    tmd = calculate_rd(
+    rd = calculate_rd(
         base_theta_ref[:, :n_know_old].to(device), model.get_Theta_buf().to(device), n_know_old
     )
     return {
@@ -572,7 +572,7 @@ def run_one_lambda(
         "ACC_new": r_new["acc"],
         "F1_old": r_old["f1"],
         "F1_new": r_new["f1"],
-        "RD": tmd,
+        "RD": rd,
     }
 
 

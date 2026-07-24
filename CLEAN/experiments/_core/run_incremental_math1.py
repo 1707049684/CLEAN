@@ -11,7 +11,7 @@ random_split（预测口径）+ user_split（重构口径）两个划分各跑�
    （论文 RQ1 score reconstruction）。base 用旧题空间(13)、策略用扩展空间(20)的评测 log。
 4. 输入作答向量在增量阶段跨完整 item 空间（用 df_train 全量构建），新旧分支都拿到真实作答。
 
-策略：Base / Ours-Ablated / Ours(DNA) / Ours(LoRA) / Full-Replay-Oracle / Naive-FT。
+策略：Base / Ours-Ablated / CLEAN-Full / CLEAN-LoRA / Full-Replay-Oracle / Naive-FT。
 结果写 incremental_result/incremental_results_{random_split,user_split}.csv。
 """
 
@@ -272,14 +272,14 @@ def buf_strategy_specs(
             train_df=train_new,
             valid_df=valid_new,
         ),
-        "Ours (Dynamic DNA)": dict(
+        "CLEAN-Full": dict(
             expand_fn=exp,
             params_fn=lambda m: new_params(m) + [m.theta_agg_mat.weight, m.psi_agg_mat.weight],
             train_df=train_new,
             valid_df=valid_new,
             mask_agg_old=True,
         ),
-        "Ours (LoRA)": dict(
+        "CLEAN-LoRA": dict(
             expand_fn=lambda m: m.expand_topology_lora(
                 delta_M=n_item_new,
                 delta_K=n_know_new,
@@ -368,8 +368,8 @@ def run_strategy(
 
     populate_buffers(m, log_full, device)
     if record_fn is not None and base_theta_old is not None:
-        tmd = calculate_rd(base_theta_old.to(device), m.get_Theta_buf().to(device), n_know_old)
-        record_fn(name, final_old(m), final_new(m), tmd)
+        rd = calculate_rd(base_theta_old.to(device), m.get_Theta_buf().to(device), n_know_old)
+        record_fn(name, final_old(m), final_new(m), rd)
     return m
 
 
@@ -413,7 +413,7 @@ def run_experiment(
     new_concepts：作为「新知识」ΔK 的概念列索引；严格拓扑二分保证旧题不依赖这些概念。
     run_strategies：None=跑全部 6 策略（默认，主实验口径不变）；给一个名字集合则只跑其中的
       非 Base 策略以省算力（Base 始终跑，因 DNA/LoRA 都从训练好的 Base 扩展）。名字用
-      "Ours-Ablated"/"Ours (Dynamic DNA)"/"Ours (LoRA)"/"Full Replay Oracle"/"Naive FT (NFT)"。
+      "Ours-Ablated"/"CLEAN-Full"/"CLEAN-LoRA"/"Full Replay Oracle"/"Naive FT (NFT)"。
     """
     print(f"\n{'#' * 70}\n# {split_name}  (mode={mode})\n{'#' * 70}")
     df_train = pd.read_csv(train_path)
@@ -494,7 +494,7 @@ def run_experiment(
 
     results = []
 
-    def record(name, r_old, r_new, tmd):
+    def record(name, r_old, r_new, rd):
         results.append(
             {
                 "Model": name,
@@ -506,7 +506,7 @@ def run_experiment(
                 "ACC_new": r_new["acc"] if r_new else "-",
                 "F1_old": r_old["f1"],
                 "F1_new": r_new["f1"] if r_new else "-",
-                "RD": tmd if tmd is not None else "",
+                "RD": rd if rd is not None else "",
             }
         )
         new_str = (
@@ -569,13 +569,13 @@ def run_experiment(
         print("\n=== 2. Ours-Ablated ===")
         run_strategy(base, "Ours-Ablated", **specs["Ours-Ablated"], **rs_kw)
 
-    if is_requested("Ours (Dynamic DNA)"):
-        print("\n=== 3. Ours (Dynamic DNA) ===")
-        run_strategy(base, "Ours (Dynamic DNA)", **specs["Ours (Dynamic DNA)"], **rs_kw)
+    if is_requested("CLEAN-Full"):
+        print("\n=== 3. CLEAN-Full ===")
+        run_strategy(base, "CLEAN-Full", **specs["CLEAN-Full"], **rs_kw)
 
-    if is_requested("Ours (LoRA)"):
-        print("\n=== 4. Ours (LoRA) ===")
-        run_strategy(base, "Ours (LoRA)", **specs["Ours (LoRA)"], **rs_kw)
+    if is_requested("CLEAN-LoRA"):
+        print("\n=== 4. CLEAN-LoRA ===")
+        run_strategy(base, "CLEAN-LoRA", **specs["CLEAN-LoRA"], **rs_kw)
 
     if is_requested("Full Replay Oracle"):
         print("\n=== 5. Full Replay Oracle ===")

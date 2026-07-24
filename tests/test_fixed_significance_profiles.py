@@ -57,13 +57,13 @@ def test_requested_roster_trains_lora_and_oracle_but_excludes_them_from_tests():
     assert "CLEAN-LoRA" not in profile["comparison_methods"]
     assert "Full-Replay" not in profile["comparison_methods"]
     assert trials._canonical_method("Base") == "G-NCDM(Anchor)"
-    assert trials._canonical_method("Ours (Dynamic DNA)") == "CLEAN-Full"
-    assert trials._canonical_method("Ours (LoRA)") == "CLEAN-LoRA"
+    assert trials._canonical_method("CLEAN-Full") == "CLEAN-Full"
+    assert trials._canonical_method("CLEAN-LoRA") == "CLEAN-LoRA"
     assert trials._canonical_method("Full Replay Oracle") == "Full-Replay"
     assert trials._method_family("ICD")[2] == "icd_trait"
     assert trials.GNCDM_INCREMENTAL_STRATEGIES == {
-        "Ours (Dynamic DNA)",
-        "Ours (LoRA)",
+        "CLEAN-Full",
+        "CLEAN-LoRA",
         "Full Replay Oracle",
     }
     assert "Ours-Ablated" not in trials.GNCDM_INCREMENTAL_STRATEGIES

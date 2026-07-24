@@ -558,12 +558,12 @@ class GNCDM(nn.Module):
         theta_old = self.f_nn(user_log[:, :self.original_n_item]) 
         
         if getattr(self, 'use_lora', False): 
-            # Ours (LoRA): 直接让新网络看新题作答 x_new，彻底斩断对旧网络 h_old 的污染！ 
+            # CLEAN-LoRA: 直接让新网络看新题作答 x_new，彻底斩断对旧网络 h_old 的污染！ 
             x_new = user_log[:, self.original_n_item:] 
             W_new_f = torch.abs(torch.matmul(self.A_new_f, self.B_new_f)) 
             theta_new = torch.sigmoid(torch.matmul(x_new, W_new_f)) 
         else: 
-            # Ours (Dense): 密集子网络看新题 
+            # CLEAN-Full: 密集子网络看新题 
             theta_new = self.f_nn_new(user_log[:, self.original_n_item:]) 
             
         theta_concat = torch.cat([theta_old, theta_new], dim=-1) 

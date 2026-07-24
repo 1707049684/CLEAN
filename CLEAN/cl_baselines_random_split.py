@@ -186,7 +186,7 @@ def evaluate_cd_metrics(model, eval_dataset, device):
     )
 
 
-def baseline_tmd(b0, model, old_user_ids, embed_dim):
+def baseline_rd(b0, model, old_user_ids, embed_dim):
     final = model.student_emb.weight.data.cpu()
     drift = torch.norm(b0[old_user_ids] - final[old_user_ids], p=2, dim=1)
     return (drift / math.sqrt(embed_dim)).mean().item()
@@ -249,7 +249,7 @@ def _bench(meta):
     )
 
 
-def _row(method, old_m, new_m, tmd):
+def _row(method, old_m, new_m, rd):
     return {
         "Method": method,
         "AUC_old": old_m[0],
@@ -260,7 +260,7 @@ def _row(method, old_m, new_m, tmd):
         "ACC_new": new_m[2],
         "F1_old": old_m[3],
         "F1_new": new_m[3],
-        "RD": tmd,
+        "RD": rd,
     }
 
 
@@ -306,7 +306,7 @@ def run_ewc(meta, device, *, seed=42, lambdas=None, eval_split="test"):
             f"EWC (lambda={lam})",
             old_m,
             new_m,
-            baseline_tmd(b0, model, meta["old_user_ids"], EMBED_DIM),
+            baseline_rd(b0, model, meta["old_user_ids"], EMBED_DIM),
         )
         r["lambda"] = lam
         rows.append(r)
@@ -360,7 +360,7 @@ def run_der(meta, device, *, seed=42, eval_split="test", mem_size=MEM_SIZE):
         f"DER++ (mem={mem_size})",
         old_m,
         new_m,
-        baseline_tmd(b0, model, meta["old_user_ids"], EMBED_DIM),
+        baseline_rd(b0, model, meta["old_user_ids"], EMBED_DIM),
     )
     r["mem_size"] = mem_size
     print(f"  DER++: AUC_old={r['AUC_old']:.4f} AUC_new={r['AUC_new']:.4f}")
@@ -404,7 +404,7 @@ def run_clora(meta, device, *, seed=42, lambdas=None, eval_split="test"):
             f"C-LoRA (lambda={lam})",
             old_m,
             new_m,
-            baseline_tmd(b0, model, meta["old_user_ids"], EMBED_DIM),
+            baseline_rd(b0, model, meta["old_user_ids"], EMBED_DIM),
         )
         r["lambda"] = lam
         rows.append(r)
@@ -509,7 +509,7 @@ def _fmt(x):
 
 def merge_and_write(cfg, ewc_rows, der_row, clora_rows):
     ours = pd.read_csv(os.path.join(SAVE_DIR, cfg["ours_csv"])).rename(
-        columns={"Model": "Method", "TMD": "RD"}
+        columns={"Model": "Method"}  # RD already
     )
     ours_rows = ours.to_dict("records")
     ewc_best, clora_best = _pick_balanced(ewc_rows), _pick_balanced(clora_rows)

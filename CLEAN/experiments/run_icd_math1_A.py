@@ -173,13 +173,13 @@ net = model.net
 model.train(old_chunks + new_chunks, i2k, beta=BETA, warmup_ratio=WARMUP, tolerance=TOLERANCE)
 trait_after = old_user_traits(net)
 
-# reference model: old-only (= state after stage 1) as the RD baseline (project baseline_tmd b0 口径)
+# reference model: old-only (= state after stage 1) as the RD baseline (project baseline_rd b0 口径)
 ref = make_icd()
 ref.train(old_chunks, i2k, beta=BETA, warmup_ratio=WARMUP, tolerance=TOLERANCE)
 trait_before = old_user_traits(ref.net)
 
 # RD = mean L2 drift of OLD-user traits caused by the new-item stage
-# (same spirit as project baseline_tmd; embedding/trait space, NOT comparable to Ours θ-RD)
+# (same spirit as project baseline_rd; embedding/trait space, NOT comparable to Ours θ-RD)
 RD = float(np.linalg.norm(trait_after - trait_before, axis=1).mean())
 print(f"RD (old-user trait drift, L2): {RD:.6f}")
 

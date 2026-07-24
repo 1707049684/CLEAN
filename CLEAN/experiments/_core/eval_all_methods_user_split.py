@@ -225,7 +225,7 @@ def coldstart_eval(model, eval_pack, device, *, seed=COLD_START_SEED):
     return old_m, new_m
 
 
-def baseline_tmd(baseline_student_emb, model, old_user_ids, embed_dim):
+def baseline_rd(baseline_student_emb, model, old_user_ids, embed_dim):
     final = model.student_emb.weight.data.cpu()
     drift = torch.norm(baseline_student_emb[old_user_ids] - final[old_user_ids], p=2, dim=1)
     return (drift / math.sqrt(embed_dim)).mean().item()
@@ -385,7 +385,7 @@ def run_ours(ours, meta, device, run_strategies=None):
 
     rows = []
 
-    def record(name, r_old, r_new, tmd):
+    def record(name, r_old, r_new, rd):
         rows.append(
             {
                 "Method": name,
@@ -397,7 +397,7 @@ def run_ours(ours, meta, device, run_strategies=None):
                 "ACC_new": r_new["acc"] if r_new else "-",
                 "F1_old": r_old["f1"],
                 "F1_new": r_new["f1"] if r_new else "-",
-                "RD": tmd if tmd is not None else "",
+                "RD": rd if rd is not None else "",
             }
         )
         ns = f" | 新 AUC={r_new['auc']:.4f} ACC={r_new['acc']:.4f}" if r_new else ""
@@ -469,8 +469,8 @@ def run_ours(ours, meta, device, run_strategies=None):
         # （requires_grad=False）→ 即便 Ours-Ablated 传 list(m.parameters()) 也训不动它 → RD=0；
         # 但 Ablated 训练了重建后的聚合矩阵旧列权重+bias（新题 Q_old≠0，二者有真实梯度），漂移使旧任务
         # 真退化，看 AUC_old 而非 RD。详细机理见 run_incremental_math1.py 的 run_strategy / DNA 注释。
-        tmd = calculate_rd(base_theta_old.to(device), m.get_Theta_buf().to(device), n_know_old)
-        record(name, final_old(m), final_new(m), tmd)
+        rd = calculate_rd(base_theta_old.to(device), m.get_Theta_buf().to(device), n_know_old)
+        record(name, final_old(m), final_new(m), rd)
 
     def is_requested(name):
         return run_strategies is None or name in run_strategies
@@ -484,20 +484,20 @@ def run_ours(ours, meta, device, run_strategies=None):
             ours["train_new"],
             ours["qry_valid_new"],
         )
-    if is_requested("Ours (Dynamic DNA)"):
-        print("\n=== Ours-3. Dynamic DNA ===")
+    if is_requested("CLEAN-Full"):
+        print("\n=== CLEAN-Full ===")
         run_strategy(
-            "Ours (Dynamic DNA)",
+            "CLEAN-Full",
             lambda m: m.expand_topology(n_item_new, n_know_new, Q_expanded),
             lambda m: new_params(m) + [m.theta_agg_mat.weight, m.psi_agg_mat.weight],
             ours["train_new"],
             ours["qry_valid_new"],
             mask_agg_old=True,
         )
-    if is_requested("Ours (LoRA)"):
-        print("\n=== Ours-4. LoRA ===")
+    if is_requested("CLEAN-LoRA"):
+        print("\n=== CLEAN-LoRA ===")
         run_strategy(
-            "Ours (LoRA)",
+            "CLEAN-LoRA",
             lambda m: m.expand_topology_lora(
                 delta_M=n_item_new,
                 delta_K=n_know_new,
@@ -542,7 +542,7 @@ def _bench(base):
     )
 
 
-def _brow(method, old_m, new_m, tmd):
+def _brow(method, old_m, new_m, rd):
     return {
         "Method": method,
         "AUC_old": old_m[0],
@@ -553,7 +553,7 @@ def _brow(method, old_m, new_m, tmd):
         "ACC_new": new_m[2],
         "F1_old": old_m[3],
         "F1_new": new_m[3],
-        "RD": tmd,
+        "RD": rd,
     }
 
 
@@ -588,7 +588,7 @@ def run_ewc(base, device, *, seed=42, lambdas=None, eval_pack=None, coldstart_se
             f"EWC (lambda={lam})",
             old_m,
             new_m,
-            baseline_tmd(b0, model, base["old_user_ids"], EMBED_DIM),
+            baseline_rd(b0, model, base["old_user_ids"], EMBED_DIM),
         )
         r["lambda"] = lam
         rows.append(r)
@@ -633,7 +633,7 @@ def run_der(
         f"DER++ (mem={mem_size})",
         old_m,
         new_m,
-        baseline_tmd(b0, model, base["old_user_ids"], EMBED_DIM),
+        baseline_rd(b0, model, base["old_user_ids"], EMBED_DIM),
     )
     r["mem_size"] = mem_size
     print(f"  DER++: AUC_old={r['AUC_old']:.4f} AUC_new={r['AUC_new']:.4f}")
@@ -680,7 +680,7 @@ def run_clora(
             f"C-LoRA (lambda={lam})",
             old_m,
             new_m,
-            baseline_tmd(b0, model, base["old_user_ids"], EMBED_DIM),
+            baseline_rd(b0, model, base["old_user_ids"], EMBED_DIM),
         )
         r["lambda"] = lam
         rows.append(r)

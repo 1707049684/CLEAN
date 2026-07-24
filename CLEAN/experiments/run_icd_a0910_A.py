@@ -363,8 +363,8 @@ out_csv = os.environ.get("ICD_OUTPUT_CSV", os.path.join(OUT, f"icd_row_{DATASET}
 out_csv = os.path.abspath(out_csv)
 os.makedirs(os.path.dirname(out_csv), exist_ok=True)
 pd.DataFrame([row]).to_csv(out_csv, index=False)
-# ready-to-append line (TMD column = RD) for all_methods_{DATASET}_random_split.csv
-print("\nappend to all_methods_%s_%s.csv (last col=TMD):" % (DATASET, SPLIT_TAG))
+# ready-to-append line (RD column) for all_methods_{DATASET}_random_split.csv
+print("\nappend to all_methods_%s_%s.csv (last col=RD):" % (DATASET, SPLIT_TAG))
 print(
     ",".join(
         str(row[k])

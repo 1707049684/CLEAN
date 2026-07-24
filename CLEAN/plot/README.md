@@ -20,7 +20,7 @@ python plot_epoch_curve_final_math1.py       # 合并上述 CSV，出终版图
 
 | 脚本 | 说明 |
 |------|------|
-| `plot_epoch_curve_math1.py` | 4 策略效率曲线（Ours-DNA/LoRA/Full-Replay/Naive-FT） |
+| `plot_epoch_curve_math1.py` | 4 策略效率曲线（CLEAN-Full/LoRA/Full-Replay/Naive-FT） |
 | `plot_epoch_curve_gncdm_math1.py` | GNCDM 骨干 5 条曲线 + X-DER + C-LoRA-GNCDM |
 | `plot_epoch_curve_avalanche_math1.py` | EWC / DER++（avalanche 环境） |
 | `plot_epoch_curve_final_math1.py` | 合并 7 模型终版图（纵轴 ACC_new） |

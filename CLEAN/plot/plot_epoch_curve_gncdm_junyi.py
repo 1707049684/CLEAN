@@ -41,7 +41,7 @@ ALPHA = 0.1
 CLORA_LAMBDA = 0.1  # all_methods_junyi_random_split.csv
 
 PLOT_NAMES = {
-    "Ours (Dynamic DNA)": "CLEAN-Full",
+    "CLEAN-Full": "CLEAN-Full",
     "Full Replay Oracle": "Full-Replay",
 }
 

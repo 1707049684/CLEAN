@@ -265,7 +265,7 @@ def _upsert_main_table(split_name: str, row):
 
     table = pd.read_csv(csv_path, dtype=str, keep_default_na=False)
     table.columns = [column.strip() for column in table.columns]
-    drift_column = "TMD" if "TMD" in table.columns else "RD"
+    drift_column = "RD" if "RD" in table.columns else "RD"
     stored = dict(row)
     stored[drift_column] = stored.pop("RD")
     for column in table.columns:
