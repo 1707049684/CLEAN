@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-CORE_DIR = Path(__file__).resolve().parents[1] / "GNCDM" / "experiments" / "_core"
+CORE_DIR = Path(__file__).resolve().parents[1] / "CLEAN" / "experiments" / "_core"
 if str(CORE_DIR) not in sys.path:
     sys.path.insert(0, str(CORE_DIR))
 

@@ -6,11 +6,11 @@ Paper: *TBD* (arXiv / venue link)
 
 ## Contents
 
-- `GNCDM/core/` — model (`expand_topology` / LoRA / aggregation)
-- `GNCDM/incremental/` — topology-aware loss + RD
-- `GNCDM/experiments/` — Math1 / ASSIST a0910 / Junyi (random & user split)
-- `GNCDM/baselines/` — ICDM
-- `GNCDM/plot/` — paper figure scripts
+- `CLEAN/core/` — model (`expand_topology` / LoRA / aggregation)
+- `CLEAN/incremental/` — topology-aware loss + RD
+- `CLEAN/experiments/` — Math1 / ASSIST a0910 / Junyi (random & user split)
+- `CLEAN/baselines/` — ICDM
+- `CLEAN/plot/` — paper figure scripts
 - `tests/` — smoke tests
 
 Not included: GIRT, alpha-sweep scripts, large result dumps, XES/NIPS34 extras.
@@ -18,7 +18,7 @@ Not included: GIRT, alpha-sweep scripts, large result dumps, XES/NIPS34 extras.
 ## Environment
 
 ```bash
-pip install -r GNCDM/requirements.txt
+pip install -r CLEAN/requirements.txt
 # EWC / DER++ also need: pip install avalanche-lib
 ```
 
@@ -31,7 +31,7 @@ Large datasets are **not** in git. Download from this repo's
 
 | Asset (example) | Unpack to |
 |-----------------|-----------|
-| `math1.zip` | `GNCDM/data/` (or keep the shipped Math1 CSVs already in-tree) |
+| `math1.zip` | `CLEAN/data/` (or keep the shipped Math1 CSVs already in-tree) |
 | `a0910.zip` | `data/a0910/` (repo root: `new_random_split/`, `new_user_split/`, `Q_matrix.npy`) |
 | `junyi.zip` | `data/junyi/` (same layout) |
 
@@ -45,7 +45,7 @@ mkdir -p data
 ## Quick start (Math1 random split)
 
 ```bash
-cd GNCDM/experiments
+cd CLEAN/experiments
 python run_incremental_math1_random_split.py
 ```
 
@@ -54,7 +54,7 @@ Other splits: `run_incremental_{a0910,junyi}_{random,user}_split.py`.
 Non-incremental G-NCDM:
 
 ```bash
-cd GNCDM
+cd CLEAN
 python core/run.py \
   --train_file data/math1_train_0.8_0.2.csv \
   --valid_file data/math1_valid_0.8_0.2.csv \
