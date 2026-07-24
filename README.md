@@ -1,8 +1,14 @@
 # CLEAN
 
-Public code for **CLEAN** (topology-aware continual learning for generative cognitive diagnosis) on G-NCDM.
+Public code for **CLEAN** (topology-aware continual learning for generative cognitive diagnosis).
 
 Paper: *TBD* (arXiv / venue link)
+
+## Backbone
+
+This codebase **reuses the G-NCDM backbone** (encoder–decoder generative cognitive diagnosis: response-to-trait diagnosis, Q-masked aggregation, and NCD interaction) as the base model.
+CLEAN adds continual / incremental learning on top of that skeleton—topology expansion (CLEAN-Full / CLEAN-LoRA), micro-variance growth, and the RD metric—without replacing the underlying G-NCDM diagnostic architecture.
+See the original G-NCDM work: [arXiv:2507.09831](https://arxiv.org/abs/2507.09831).
 
 ## Contents
 
