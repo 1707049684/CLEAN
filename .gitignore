@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+GNCDM/result/
+GNCDM/incremental_result/
+*.pt
+*.pth
