@@ -322,7 +322,7 @@ def run_strategy(
     final_new,
     base_theta_old=None,
     record_fn=None,
-    n_epoch=15,
+    n_epoch=25,
     mask_agg_old=False,
     history=None,
     curve_eval_fn=None,
@@ -537,7 +537,7 @@ def run_experiment(
         log_old,
         list(base.parameters()),
         device,
-        n_epoch=15,
+        n_epoch=25,
         desc="Base",
         eval_fn=base_eval_fn,
     )
@@ -557,7 +557,7 @@ def run_experiment(
         final_new=final_new,
         base_theta_old=base_theta_old,
         record_fn=record,
-        n_epoch=15,
+        n_epoch=25,
         select_metric=strategy_select_metric,
         run_strategies=run_strategies,
     )

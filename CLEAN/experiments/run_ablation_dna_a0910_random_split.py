@@ -36,7 +36,7 @@ from run_incremental_math1 import (  # noqa: E402
 DATA_DIR = os.path.join(REPO_ROOT, "data", "a0910")
 N_USER, N_ITEM, N_KNOW = 4163, 17746, 123
 ALPHA = 0.1
-N_EPOCH = 15
+N_EPOCH = 25
 SEED = 42
 
 

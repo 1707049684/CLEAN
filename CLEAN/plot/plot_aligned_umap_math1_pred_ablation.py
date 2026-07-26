@@ -53,7 +53,7 @@ DATA_DIR = Path(R.DATA_DIR)
 N_USER, N_ITEM, N_KNOW = 4209, 20, 11
 ALPHA = 0.20
 NEW_CONCEPTS = [0, 1, 3, 6]
-N_EPOCH = 15
+N_EPOCH = 25
 SEED = 42
 
 # (display label, cache tag, params_fn factory, mask_agg_old)

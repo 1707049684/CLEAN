@@ -2,7 +2,7 @@
 """Junyi random_split ACC_new/ACC_old epoch curves (GNCDM backbone). Mirrors math1.
 
 Run on GPU server:
-  cd CLEAN/plot && python plot_epoch_curve_gncdm_junyi.py --epochs 15
+  cd CLEAN/plot && python plot_epoch_curve_gncdm_junyi.py --epochs 25
 """
 
 import argparse
@@ -18,7 +18,7 @@ for p in (GNCDM_DIR, EXPERIMENTS_DIR, os.path.join(EXPERIMENTS_DIR, "_core")):
         sys.path.insert(0, p)
 
 _pre = argparse.ArgumentParser(add_help=False)
-_pre.add_argument("--epochs", type=int, default=15)
+_pre.add_argument("--epochs", type=int, default=25)
 _cli_epochs, _unknown = _pre.parse_known_args()
 if "--epochs" in sys.argv:
     i = sys.argv.index("--epochs")

@@ -50,7 +50,7 @@ DATA_DIR = REPO_ROOT / "data" / "a0910"
 
 N_USER, N_ITEM, N_KNOW = 4163, 17746, 123
 ALPHA = 0.1
-N_EPOCH = 15
+N_EPOCH = 25
 SEED = 42
 # ponytail: full M_old≈11k kills wall-clock; fixed subset keeps ablations comparable
 N_OLD_PRED = 256

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Junyi random_split EWC/DER++ epoch curves. Needs avalanche.
 
-  cd CLEAN/plot && python plot_epoch_curve_avalanche_junyi.py --epochs 15
+  cd CLEAN/plot && python plot_epoch_curve_avalanche_junyi.py --epochs 25
 """
 
 import argparse
@@ -117,7 +117,7 @@ def der_curve(meta, device, curve_max_epoch):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--epochs", type=int, default=15)
+    parser.add_argument("--epochs", type=int, default=25)
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"device = {device} | epochs = {args.epochs}")

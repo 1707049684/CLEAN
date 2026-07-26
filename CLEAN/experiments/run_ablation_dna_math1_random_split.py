@@ -34,7 +34,7 @@ from run_incremental_math1 import (  # noqa: E402
 N_USER, N_ITEM, N_KNOW = 4209, 20, 11
 NEW_CONCEPTS = [0, 1, 3, 6]
 ALPHA = 0.20
-N_EPOCH = 15
+N_EPOCH = 25
 
 
 def make_col_mask(n_know_old):
