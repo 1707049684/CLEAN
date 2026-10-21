@@ -84,4 +84,4 @@ python core/run.py \
 
 ## License
 
-Add a `LICENSE` file before publishing (e.g. MIT).
+This project is released under the [MIT License](LICENSE).
